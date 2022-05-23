@@ -2,17 +2,6 @@ const fs = require('fs');
 const path = require('path')
 const rimraf = require('rimraf')
 
-// fs.readdir(path.join(__dirname), (err, data) => {
-//    if (err) console.log(err)
-//    data.forEach(el => {
-//       if (el === 'project-dist') {
-//          rimraf(path.join(__dirname, el), (err) => {
-//             if(err) console.log(err)
-//          })
-//       }
-//    })
-// })
-
 fs.mkdir(path.join(__dirname, 'project-dist'), { recursive: true }, err => {
    if (err) throw err;
 });
@@ -78,13 +67,16 @@ fs.readdir(path.join(__dirname, 'assets'), (err, elem) => {
 })
 
 // копируем файлы
-// fs.readdir(path.join(__dirname, 'assets'), (err, elems) => {
-//    elems.forEach(elem => {
-//       console.log(elem)
-//       fs.readdir(path.join(__dirname, 'assets', elem), (err, files) => {
-//          console.log(path.join(__dirname, 'assets', elem, files))
-//          // fs.copyFile(path.join(__dirname, 'assets', elem, files), path.join(__dirname, 'project-dist', 'assets', elem, files));
-//       })
-//    })
-// });
+fs.readdir(path.join(__dirname, 'assets'), (err, elems) => {
+   elems.forEach(elem => {
+      fs.readdir(path.join(__dirname, 'assets', elem), { withFileTypes: true }, (err, files) => {
+         files.forEach(el => {
+            fs.copyFile(path.join(__dirname, 'assets', elem, el.name), path.join(__dirname, 'project-dist', 'assets', elem, el.name), err => {
+               if (err) console.log(err)
+            });
+         })
+         
+      })
+   })
+});
 
